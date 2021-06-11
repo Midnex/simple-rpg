@@ -1,4 +1,4 @@
-#! /usr/bin/python3
+#! /usr/bin/python3.6
 
 from random import randint
 
@@ -14,9 +14,9 @@ class Character:
             enemy.health)
         enemy.health = enemy.health - damage
         if damage == 0:
-            print("%s evades %s's attack.") % (enemy.name, self.name)
+            print(f"{enemy.name} evades {self.name}s attack.")
         else:
-            print("%s hurts %s!") % (self.name, enemy.name)
+            print(f"{self.name} hurts {enemy.name}!")
         return enemy.health <= 0
 
 
@@ -35,48 +35,47 @@ class Player(Character):
         self.health_max = 10
 
     def quit(self):
-        print(
-            "%s can't find the way back home, and dies of starvation.\nR.I.P.") % self.name
+        print(f"{self.name} can't find the way back home, and dies of starvation.")
+        print("R.I.P.")
         self.health = 0
 
     def help(self): 
         print(list(Commands.keys()))
 
     def status(self): 
-        print("%s's health: %d/%d") % (self.name, self.health, self.health_max)
+        print(f"{self.name}'s health: {self.health}/{self.health_max}")
 
     def tired(self):
-        print("%s feels tired.") % self.name
+        print(f"{self.name} feels tired.")
         self.health = max(1, self.health - 1)
 
     def rest(self):
         if self.state != 'normal':
-            print("%s can't rest now!") % self.name
+            print(f"{self.name} can't rest now!")
             self.enemy_attacks()
         else:
-            print("%s rests.") % self.name
+            print(f"{self.name} rests.")
             if randint(0, 1):
                 self.enemy = Enemy(self)
-                print("%s is rudely awakened by %s!") % (
-                    self.name, self.enemy.name)
+                print(f"{self.name} is rudely awakened by {self.enemy.name}!")
                 self.state = 'fight'
                 self.enemy_attacks()
             else:
                 if self.health < self.health_max:
                     self.health = self.health + 1
                 else:
-                    print("%s slept too much.") % self.name
+                    print(f"{self.name} slept too much.")
                     self.health = self.health - 1
 
     def explore(self):
         if self.state != 'normal':
-            print("%s is too busy right now!") % self.name
+            print(f"{self.name} is too busy right now!")
             self.enemy_attacks()
         else:
-            print("%s explores a twisty passage.") % self.name
+            print("{self.name} explores a twisty passage.")
             if randint(0, 1):
                 self.enemy = Enemy(self)
-                print("%s encounters %s!") % (self.name, self.enemy.name)
+                print(f"{self.name} encounters {self.enemy.name}!")
                 self.state = 'fight'
             else:
                 if randint(0, 1):
@@ -84,38 +83,37 @@ class Player(Character):
 
     def flee(self):
         if self.state != 'fight':
-            print("%s runs in circles for a while.") % self.name
+            print(f"{self.name} runs in circles for a while.")
             self.tired()
         else:
             if randint(1, self.health + 5) > randint(1, self.enemy.health):
-                print("%s flees from %s.") % (self.name, self.enemy.name)
+                print(f"{self.name} flees from {self.enemy.name}.")
                 self.enemy = None
                 self.state = 'normal'
             else:
-                print("%s couldn't escape from %s!") % (
-                    self.name, self.enemy.name)
+                print(f"{self.name} couldn't escape from {self.enemy.name}!")
                 self.enemy_attacks()
 
     def attack(self):
         if self.state != 'fight':
-            print("%s swats the air, without notable results.") % self.name
+            print(f"{self.name} swats the air, without notable results.")
             self.tired()
         else:
             if self.do_damage(self.enemy):
-                print("%s executes %s!") % (self.name, self.enemy.name)
+                print(f"{self.name} executes {self.enemy.name}!")
                 self.enemy = None
                 self.state = 'normal'
                 if randint(0, self.health) < 10:
                     self.health = self.health + 1
                     self.health_max = self.health_max + 1
-                    print("%s feels stronger!") % self.name
+                    print(f"{self.name} feels stronger!")
             else:
                 self.enemy_attacks()
 
     def enemy_attacks(self):
         if self.enemy.do_damage(self):
-            print("%s was slaughtered by %s!!!\nR.I.P.") % (
-                self.name, self.enemy.name)
+            print(f"{self.name} was slaughtered by {self.enemy.name}!!!")
+            print("R.I.P.")
 
 
 Commands = {
@@ -131,7 +129,7 @@ Commands = {
 p = Player()
 p.name = input("What is your character's name? ")
 print("(type help to get a list of actions)\n")
-print("%s enters a dark cave, searching for adventure.") % p.name
+print(f"{p.name} enters a dark cave, searching for adventure.")
 
 while(p.health > 0):
     line = input("> ")
@@ -144,4 +142,4 @@ while(p.health > 0):
                 commandFound = True
                 break
         if not commandFound:
-            print("%s doesn't understand the suggestion.") % p.name
+            print(f"{p.name} doesn't understand the suggestion.")
