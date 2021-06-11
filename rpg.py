@@ -72,7 +72,7 @@ class Player(Character):
             print(f"{self.name} is too busy right now!")
             self.enemy_attacks()
         else:
-            print("{self.name} explores a twisty passage.")
+            print(f"{self.name} explores a twisty passage.")
             if randint(0, 1):
                 self.enemy = Enemy(self)
                 print(f"{self.name} encounters {self.enemy.name}!")
